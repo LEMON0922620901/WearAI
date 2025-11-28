@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Google_Gemini_logo.svg/1024px-Google_Gemini_logo.svg.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WearAI - 智能虛擬試衣</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Outfit', 'Inter', 'Noto Sans TC', 'sans-serif'],
+              serif: ['Outfit', 'Noto Serif TC', 'serif'], // Replacing serif with Outfit for bolder look as requested
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700&display=swap');
+      
+      :root {
+        /* Light Mode (Light Blue Theme) */
+        --bg-color: #f0f9ff; /* sky-50 */
+        --orb-1: #bae6fd;    /* sky-200 */
+        --orb-2: #e0c3fc;    /* purple-200 */
+        --orb-3: #a5f3fc;    /* cyan-200 */
+        --text-main: #0f172a;
+      }
+
+      [data-theme="dark"] {
+        /* Dark Mode (Deep Blue Theme) */
+        --bg-color: #020617; /* slate-950 */
+        --orb-1: #1e3a8a;    /* blue-900 */
+        --orb-2: #312e81;    /* indigo-900 */
+        --orb-3: #172554;    /* blue-950 */
+        --text-main: #f8fafc;
+      }
+      
+      body {
+        font-family: 'Outfit', 'Noto Sans TC', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        overflow-x: hidden;
+        transition: background-color 0.5s ease, color 0.5s ease;
+      }
+
+      /* Liquid Background */
+      .liquid-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        background: var(--bg-color);
+        overflow: hidden;
+      }
+      
+      .liquid-orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.6;
+        animation: floatOrb 20s infinite ease-in-out alternate;
+        transition: background-color 1s ease;
+      }
+
+      .orb-1 {
+        top: -10%;
+        left: -10%;
+        width: 50vw;
+        height: 50vw;
+        background: var(--orb-1);
+        animation-duration: 25s;
+      }
+
+      .orb-2 {
+        bottom: -20%;
+        right: -10%;
+        width: 60vw;
+        height: 60vw;
+        background: var(--orb-2);
+        animation-duration: 30s;
+        animation-delay: -5s;
+      }
+      
+      .orb-3 {
+        top: 40%;
+        left: 40%;
+        width: 30vw;
+        height: 30vw;
+        background: var(--orb-3);
+        animation-duration: 20s;
+        animation-delay: -10s;
+      }
+
+      /* Enhanced Glassmorphism */
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 
+          0 4px 6px -1px rgba(0, 0, 0, 0.05), 
+          0 2px 4px -1px rgba(0, 0, 0, 0.03),
+          inset 0 0 20px rgba(255, 255, 255, 0.4);
+        transition: background 0.3s ease, border-color 0.3s ease;
+      }
+
+      /* Dark Mode Glass Override */
+      [data-theme="dark"] .glass-panel {
+        background: rgba(15, 23, 42, 0.4); /* Darker slate base */
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 
+          0 4px 6px -1px rgba(0, 0, 0, 0.3), 
+          inset 0 0 20px rgba(255, 255, 255, 0.05);
+      }
+      
+      .glass-card-hover:hover {
+        transform: translateY(-2px);
+      }
+
+      @keyframes floatOrb {
+        0% { transform: translate(0, 0) scale(1); }
+        100% { transform: translate(10%, 10%) scale(1.1); }
+      }
+      
+      .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+      }
+      .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+      }
+      @keyframes fade-in {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-fade-in {
+        animation: fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div class="liquid-bg">
+      <div class="liquid-orb orb-1"></div>
+      <div class="liquid-orb orb-2"></div>
+      <div class="liquid-orb orb-3"></div>
+    </div>
+    <div id="root"></div>
+  </body>
+</html>

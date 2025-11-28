@@ -1,0 +1,5 @@
+{
+  "name": "WearAI",
+  "description": "WearAI - 使用 Gemini 3 Pro Image 模型打造的虛擬換裝體驗。上傳照片，選擇服飾，一鍵生成時尚穿搭。",
+  "requestFramePermissions": []
+}
